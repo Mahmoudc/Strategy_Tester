@@ -13,9 +13,13 @@
 
 class Account {
 private:
+    double original_balance=0;
+    double original_profit_percent=0;
+    double original_loss_percent=0;
     double balance=0;
     double profit_percent=0;
     double loss_percent=0;
+    double total_profit=0;
     int trades_taken=0;
 public:
     Account(double balance, double profit_percent, double loss_percent);
@@ -28,4 +32,5 @@ public:
     void set_trades_taken(int);
     void set_profit_percent(double p);
     void set_loss_percent(double l);
+    void strategy_1(int r);
 };
