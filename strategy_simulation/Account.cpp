@@ -125,6 +125,7 @@ void Account::strategy_1(int runs)
     cout<<endl<<endl;
     cout<<runs<<"- "<<"Your total wins is: "<<wins<<endl<<"Your total losses is: "<<losses<<endl;
     cout<<"Your total break even is: "<<break_even<<endl;
+    cout<<"Win rate percent: "<<fixed<<setprecision(2)<<((double)wins/trades_taken)*100.0<<"%"<<endl;
     cout<<"Profit percent: "<<total_profit<<"%";
     cout<<endl;
     //double profit_account=(total_profit/100)*account_balance;
