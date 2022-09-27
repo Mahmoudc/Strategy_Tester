@@ -19,6 +19,7 @@ Account::Account(double balance, double profit_percent, double loss_percent)
 }
 Account::Account()
 {
+    this->balance=original_balance;
 }
 double Account::get_balance() {
     return this->balance;
@@ -59,7 +60,6 @@ void Account::strategy_1(int runs)
     int random_trade=0;
     int wins=0, losses=0, break_even=0;
     int row_track=0;
-    bool win_4=false;
     for(int i=0;i<trades_taken;i++)
     {
         srand(seed);
@@ -68,17 +68,17 @@ void Account::strategy_1(int runs)
         {
             case 0:
                 wins++;
-                this->balance+=((this->profit_percent/100.0)*this->balance);
+                this->balance+=((this->profit_percent/100.0)*this->original_balance);
                 row_track++;
-                cout<<i+1<<"- Win percent: "<<profit_percent<<"%"<<endl;
+                cout<<i+1<<"- Win percent: +"<<profit_percent<<"%"<<endl;
                 cout<<"Current balance: $"<<balance<<endl;
                 cout<<"Row track: "<<row_track<<endl<<endl;
                 break;
             case 1:
                 losses++;
-                this->balance-=((this->loss_percent/100.0)*this->balance);
+                this->balance-=((this->loss_percent/100.0)*this->original_balance);//the loss must be base on the original balance
                 row_track--;
-                cout<<i+1<<"- Loss percent: "<<loss_percent<<"%"<<endl;
+                cout<<i+1<<"- Loss percent: -"<<loss_percent<<"%"<<endl;
                 cout<<"Current balance: $"<<balance<<endl;
                 cout<<"Row track: "<<row_track<<endl<<endl;
                 break;
@@ -106,7 +106,7 @@ void Account::strategy_1(int runs)
         {
             this->profit_percent=original_profit_percent;
             this->loss_percent=original_loss_percent;
-            row_track=0;
+            //row_track=0;
         }
         else if(row_track==-4)
         {
