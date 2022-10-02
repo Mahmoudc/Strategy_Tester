@@ -16,16 +16,29 @@ Account set_account(double b=0);
 int main(int argc, const char * argv[]) {
     // insert code here..
     int runs=0;
+    int program_type=0;
     Account account=*new Account();
     while(true)
     {
-        Account account=set_account(account.get_balance());
-        cout<<"\nEnter how many times you would like to run simulations: ";
-        cin>>runs;
-        for(int i=0;i<runs;i++)
+        cout<<"Enter the program you'd like to run"<<endl;
+        cout<<"1- For strategy simulation\n2- To find points per trade\n";
+        cin>>program_type;
+        if(program_type==1)
         {
-            account.strategy_1(i+1);
+            Account account=set_account(account.get_balance());
+            cout<<"\nEnter how many times you would like to run simulations: ";
+            cin>>runs;
+            for(int i=0;i<runs;i++)
+            {
+                account.strategy_1(i+1);
+            }
+            account.display_total_win_rate(runs);
         }
+        else if(program_type==2)
+        {
+            Account::find_rr_percent_symbol();
+        }
+        
     }
     
     

@@ -10,6 +10,7 @@ using namespace std;
 #include <chrono> //For system_clock
 #include <random>
 #include <iomanip>
+#include <fstream>
 
 Account::Account(double balance, double profit_percent, double loss_percent)
 {
@@ -56,10 +57,14 @@ void Account::strategy_1(int runs)
 {
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
-    uniform_int_distribution<int> distributionInteger(0, 2);
+    uniform_int_distribution<int> distributionInteger(0, 1);
     int random_trade=0;
     int wins=0, losses=0, break_even=0;
     int row_track=0;
+    fstream file;
+    file.open("test.txt",std::ios::out);
+    file << "fflush";
+    file.close();
     for(int i=0;i<trades_taken;i++)
     {
         srand(seed);
@@ -82,16 +87,16 @@ void Account::strategy_1(int runs)
                 cout<<"Current balance: $"<<balance<<endl;
                 cout<<"Row track: "<<row_track<<endl<<endl;
                 break;
-            case 2:
-                break_even++;
-                break;
+//            case 2:
+//                break_even++;
+//                break;
                 
         }
        // cout<<"Current balance: $"<<balance<<endl;
         double profit_times_3=(original_balance*(profit_percent/100.0)*3)+original_balance;
         double loss_times_4=(original_balance*(loss_percent/100.0)*4)-original_balance;
         //The issue is that your adjusting the original balance so the original data is lost
-        if(row_track>=3) //check that its 4 times profit from the original balance as well
+        if(row_track==2) //check that its 4 times profit from the original balance as well
         {
             //increase stop loss and profit double
             //will reset the row track as well
@@ -102,7 +107,7 @@ void Account::strategy_1(int runs)
         }
         //So we need to get back to the original state when I condition is meet
         //Lose twice in a row go back to original state
-        else if(row_track==-2)
+        else if(row_track==-2 || row_track==0)
         {
             this->profit_percent=original_profit_percent;
             this->loss_percent=original_loss_percent;
@@ -110,9 +115,9 @@ void Account::strategy_1(int runs)
         }
         else if(row_track==-4)
         {
-            //profit will decrease by 25% and loss will decrease by 50%
-            profit_percent=(original_profit_percent*0.75);
-            loss_percent=original_loss_percent/2;
+            //profit will decrease by 10% and loss will decrease by 30%
+            profit_percent=(original_profit_percent*0.90);
+            loss_percent=(original_loss_percent*0.70);
             row_track=0;
         }
     
@@ -124,7 +129,7 @@ void Account::strategy_1(int runs)
     total_profit=((balance-original_balance)/original_balance)*100;
     cout<<endl<<endl;
     cout<<runs<<"- "<<"Your total wins is: "<<wins<<endl<<"Your total losses is: "<<losses<<endl;
-    cout<<"Your total break even is: "<<break_even<<endl;
+  //  cout<<"Your total break even is: "<<break_even<<endl;
     cout<<"Win rate percent: "<<fixed<<setprecision(2)<<((double)wins/trades_taken)*100.0<<"%"<<endl;
     cout<<"Profit percent: "<<total_profit<<"%";
     cout<<endl;
@@ -136,5 +141,45 @@ void Account::strategy_1(int runs)
     //reset the win and loss percentages
     profit_percent=original_profit_percent;
     loss_percent=original_loss_percent;
+    if(total_profit>0)
+    {
+        total_win_count++;
+    }
     
+}
+void Account::display_total_win_rate(int r)
+{
+    //r
+    double win_rate=((double)total_win_count/r)*100;
+    cout<<"\nYour total win rate is: "<<win_rate<<"%"<<endl;
+    total_win_count=0;
+}
+
+void Account::find_rr_percent_symbol()
+{
+    int select_value=0;
+    double points=0;
+    double risk_percent=0;
+    double lot_size=0.01;
+    do
+    {
+        cout<<"Select a symbol:"<<endl;
+        cout<<"1- XAUUSD\n2- NAS100\n3- US30\n4- EURUSD\n5- GBPUSD"<<endl;
+        cin>>select_value;
+        cout<<"\nEnter your risk percent: ";
+        cin>>risk_percent;
+        cout<<"\nEnter lot size: ";
+        cin>>lot_size;
+    }while(select_value<1&&select_value>5);
+    if(select_value==1)
+    {
+        //So if 1% means 1 dollar
+        //that means 0.01 is 0.01
+        //0.10 is
+        if(lot_size<1)
+            points=((double)risk_percent)*(1.0/lot_size);
+        else if(lot_size>=1)
+            points=((double)risk_percent)*lot_size;
+        cout<<"\nPoints equivalent: "<<points<<endl;
+    }
 }

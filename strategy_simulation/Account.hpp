@@ -21,6 +21,7 @@ private:
     double loss_percent=0;
     double total_profit=0;
     int trades_taken=0;
+    int total_win_count=0;
 public:
     Account(double balance, double profit_percent, double loss_percent);
     Account();
@@ -33,4 +34,6 @@ public:
     void set_profit_percent(double p);
     void set_loss_percent(double l);
     void strategy_1(int r);
+    static void find_rr_percent_symbol();
+    void display_total_win_rate(int r);
 };
